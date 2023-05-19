@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menampilkan Data dari REST API</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h3>Form Data</h3>
+    <div class="container">
+        <form name="myForm" onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="price">Price:</label>
+                <input type="text" class="form-control" id="price" name="price">
+            </div>
+
+            <div class="form-group">
+                <label for="exchange">Exchange:</label>
+                <input type="text" class="form-control" id="exchange" name="exchange">
+            </div>
+
+            <div class="form-group">
+                <label for="pair">Pair:</label>
+                <input type="text" class="form-control" id="pair" name="pair">
+            </div>
+
+            <div class="form-group">
+                <label for="pairPrice">Pair Price:</label>
+                <input type="text" class="form-control" id="pairPrice" name="pairPrice">
+            </div>
+
+            <div class="form-group">
+                <label for="volume">Volume:</label>
+                <input type="text" class="form-control" id="volume" name="volume">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <br>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Price</th>
+                    <th>Exchange</th>
+                    <th>Pair</th>
+                    <th>Pair Price</th>
+                    <th>Volume</th>
+                </tr>
+            </thead>
+            <tbody id="data-table-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function validateForm() {
+            var price = document.forms["myForm"]["price"].value;
+            var exchange = document.forms["myForm"]["exchange"].value;
+            var pair = document.forms["myForm"]["pair"].value;
+            var pairPrice = document.forms["myForm"]["pairPrice"].value;
+            var volume = document.forms["myForm"]["volume"].value;
+
+            if (price === "" || exchange === "" || pair === "" || pairPrice === "" || volume === "") {
+                alert("Please fill in all fields.");
+                return false;
+            }
+        }
+
+        $(document).ready(function() {
+            $.ajax({
+                url: 'https://api.coinstats.app/public/v1/markets?coinId=bitcoin',  
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var data = response;  
+
+    
+                    for (var i = 0; i < data.length; i++) {
+                        var row = `<tr>
+                            <td>${data[i].price}</td>
+                            <td>${data[i].exchange}</td>
+                            <td>${data[i].pair}</td>
+                            <td>${data[i].pairPrice}</td>
+                            <td>${data[i].volume}</td>
+                        </tr>`;
+                        $('#data-table-body').append(row);
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan dalam memuat data.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

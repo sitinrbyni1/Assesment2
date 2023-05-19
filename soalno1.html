@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menampilkan Data dari REST API</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Price</th>
+                    <th>Exchange</th>
+                    <th>Pair</th>
+                    <th>PairPrice</th>
+                    <th>Volume</th>
+                </tr>
+            </thead>
+            <tbody id="data-table-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: 'https://api.coinstats.app/public/v1/markets?coinId=bitcoin',   // Ganti URL dengan URL REST API yang sesuai
+                method: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    var data = response;  // Respons JSON
+
+                    // Iterasi data untuk membuat baris tabel
+                    for (var i = 0; i < data.length; i++) {
+                        var row = `<tr>
+                            <td>${data[i].price}</td>
+                            <td>${data[i].exchange}</td>
+                            <td>${data[i].pair}</td>
+                            <td>${data[i].pairPrice}</td>
+                            <td>${data[i].volume}</td>
+                        </tr>`;
+                        $('#data-table-body').append(row);
+                    }
+                },
+                error: function() {
+                    alert('Terjadi kesalahan dalam memuat data.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
